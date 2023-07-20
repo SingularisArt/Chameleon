@@ -22,10 +22,6 @@ oomoxgtk:
   name: "Oomox GTK Theme"
   path: "~/"
 
-spotify:
-  command: "spicetify update"
-  name: "Spotify"
-
 pywalfox:
   command: "pywalfox update"
   name: "Firefox"
@@ -41,3 +37,5 @@ xmenu:
   command: "sudo make clean install"
   name: "XMenu"
   path: "~/.config/xmenu"
+
+starttree:
