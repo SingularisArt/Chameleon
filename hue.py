@@ -3,38 +3,34 @@
 import argparse
 import os
 import subprocess
-from os.path import expanduser
 
+from path import Path
 import yaml
 
-home = expanduser("~")
 
-config_dir = home + "/.config/chameleon"
-config_path = home + "/.config/chameleon/config.yaml"
+home = Path("~").expanduser()
+wall_jpg_path = home / ".config/wall.jpg"
+
+config_dir = home / ".config/hue"
+config_path = home / ".config/hue/config.yaml"
 
 
-class BColors:
-    """Keeps all of the colors in one place."""
-
+class Colors:
     HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKGREEN = "\033[92m"
     WARNING = "\033[93m"
     FAIL = "\033[91m"
-    ENDC = "\033[0m"
+    END = "\033[0m"
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
-
-
-###############################################################################
-#                                                                             #
-#                                    Utils                                    #
-#                                                                             #
-###############################################################################
+    BLUE = "\033[94m"
+    GREEN = "\033[92m"
 
 
 def run_command(command_list, cwd=None, get_output=None):
     stdout = subprocess.PIPE if get_output else subprocess.DEVNULL
+    stderr = subprocess.PIPE if get_output else subprocess.DEVNULL
+    if isinstance(command_list, list):
+        command_list = " ".join(command_list)
 
     if cwd == "":
         cwd = None
@@ -43,6 +39,7 @@ def run_command(command_list, cwd=None, get_output=None):
         command_list,
         cwd=cwd,
         stdout=stdout,
+        stderr=stderr,
         shell=True,
     )
     p.wait()
@@ -72,35 +69,26 @@ def parse_yaml(config_path):
 
 
 def print_status(status, program):
-    """
-    Prints the status of the program.
-    0: Themed program,
-    1: Failed to theme program,
-    2: Warning,
-    3: Hooked
-    """
-
-    end = BColors.ENDC
-    fail = BColors.FAIL
-    warning = BColors.WARNING
-    green = BColors.OKGREEN
-    blue = BColors.OKBLUE
+    end = Colors.END
+    fail = Colors.FAIL
+    warning = Colors.WARNING
+    green = Colors.GREEN
+    blue = Colors.BLUE
 
     if status == 0:
-        print(f"{green} ⚡ {end} Themed {program} {end}")
+        print(f"{green} ⚡ {end} Themed {program}{end}")
     elif status == 1:
-        print(f"{fail} X {end} {warning} Failed to theme {program} {end}")
+        print(f"{fail} X {end} {warning} Failed to theme {program}{end}")
     elif status == 2:
-        print(f"{fail} X {end} {warning} User Hook {program} failed {end}")
+        print(f"{fail} X {end} {warning} User Hook {program} failed{end}")
     elif status == 3:
-        print(f"{green} ⚡ {end} {blue} {program} User hook {end} succeeded")
+        print(
+            f"{green} ⚡ {end} {blue} {program} User hook {end} succeeded{end}",
+        )
 
 
-###############################################################################
-#                                                                             #
-#                                  Main Code                                  #
-#                                                                             #
-###############################################################################
+def clear_cache():
+    run_command(["rm", "-rf", "~/.cache/wal"])
 
 
 def parse_args():
@@ -133,14 +121,17 @@ def parse_args():
 def call_wal(args, walargs):
     if args.image:
         try:
-            imagepath = os.path.abspath(args.image)
+            clear_cache()
+
+            imagepath = Path(args.image).abspath()
             commandlist = ["wal", "-i", imagepath]
             commandlist.extend(walargs)
 
             run_command(commandlist)
-            os.system(f"feh --bg-scale {args.image}")
-            if args.image != "~/.config/wall.jpg":
-                os.system(f"cp {args.image} ~/.config/wall.jpg")
+            run_command(["feh", "--bg-scale", args.image])
+
+            if args.image != wall_jpg_path:
+                run_command(["cp", args.image, wall_jpg_path])
         except Exception:
             print_status(1, "pywal")
             return
