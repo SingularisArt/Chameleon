@@ -11,8 +11,8 @@ import yaml
 home = Path("~").expanduser()
 wall_jpg_path = home / ".config/wall.jpg"
 
-config_dir = home / ".config/hue"
-config_path = home / ".config/hue/config.yaml"
+config_dir = home / ".config/chameleon"
+config_path = home / ".config/chameleon/config.yaml"
 
 
 class Colors:
