@@ -123,7 +123,7 @@ def call_wal(args, walargs):
         try:
             clear_cache()
 
-            imagepath = Path(args.image).abspath()
+            imagepath = Path(args.image)
             commandlist = ["wal", "-i", imagepath]
             commandlist.extend(walargs)
 

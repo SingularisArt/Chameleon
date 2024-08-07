@@ -4,6 +4,8 @@
 # If the `command` is a collection of multiple commands, then you must break it
 # up into multiple commands, like shown in the `wal-discord` program .
 
+debug: false
+
 oomoxicons:
   command:
     - "oomox-archdroid-icons-cli /opt/oomox/scripted_colors/xresources/xresources-reverse"
@@ -33,9 +35,7 @@ wal-discord:
   name: "Discord"
   path: "~/.local/bin"
 
-xmenu:
-  command: "sudo make clean install"
-  name: "XMenu"
-  path: "~/.config/xmenu"
-
 starttree:
+  command: "./generate.py"
+  name: "Start Tree"
+  path: "~/Documents/start-tree"
