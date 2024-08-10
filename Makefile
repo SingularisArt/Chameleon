@@ -12,8 +12,11 @@ install:
 	-mv $(CONF_FILE) $(CONF_FILE)-backup 2>/dev/null
 	-cp -r $(CURRENT_DIR)/config-template.yaml $(CONF_FILE)
 	@echo "installing $(PIPVER) dependencies"
-	@$(PIPVER) install whichcraft || echo "dependencies couldn't be installed install pip and rerun"
+	@$(PIPVER) install argparse || echo "dependencies couldn't be installed install pip and rerun"
+	@$(PIPVER) install path || echo "dependencies couldn't be installed install pip and rerun"
 	@$(PIPVER) install pywal || echo "dependencies couldn't be installed install pip and rerun"
+	@$(PIPVER) install whichcraft || echo "dependencies couldn't be installed install pip and rerun"
+	@$(PIPVER) install yaml || echo "dependencies couldn't be installed install pip and rerun"
 uninstall:
 	-rm -rf $(CONFIG)/chameleon
 	@echo "removed $(CONFIG)/chameleon"
